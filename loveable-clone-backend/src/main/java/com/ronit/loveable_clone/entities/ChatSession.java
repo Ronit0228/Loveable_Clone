@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,6 +18,10 @@ import java.time.Instant;
 @AllArgsConstructor
 @Table(name = "chat_sessions")
 public class ChatSession {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
 
     @NotNull(message = "Project is required")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

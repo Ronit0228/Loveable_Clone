@@ -4,6 +4,6 @@ public record PlanLimitResponse(
     String planName,
     Long maxTokenPerDay,
     Long maxProject,
-    boolean unlimitedAi
+    Boolean unlimitedAi
 ) {
 }

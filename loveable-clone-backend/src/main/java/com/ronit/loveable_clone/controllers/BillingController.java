@@ -3,7 +3,9 @@ package com.ronit.loveable_clone.controllers;
 import com.ronit.loveable_clone.dto.subscription.*;
 import com.ronit.loveable_clone.sevice.PlanService;
 import com.ronit.loveable_clone.sevice.SubscriptionService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class BillingController {
 
     private final PlanService planService;

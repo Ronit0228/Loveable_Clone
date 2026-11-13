@@ -34,7 +34,8 @@ public class ProjectMember {
     @Column(name = "project_member_role")
     ProjectMemberRole projectMemberRole;
 
-    @Column(name = "invited_by")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invited_by", updatable = false)
     User invitedBy;
 
     @Column(name = "invited_at")

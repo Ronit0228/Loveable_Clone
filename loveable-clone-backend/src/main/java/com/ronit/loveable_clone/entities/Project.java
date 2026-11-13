@@ -37,7 +37,8 @@ public class Project {
 
     @NotNull(message = "Project visibility is required")
     @Column(name = "is_public", nullable = false)
-    Boolean isPublic;
+    @Builder.Default
+    Boolean isPublic = false;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default

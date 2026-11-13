@@ -37,7 +37,7 @@ public class User {
     String email;
 
     @NotBlank(message = "Password cannot be blank")
-    @Size(min = 60, max = 255, message = "Invalid password hash length")
+    @Size(min = 8, max = 8, message = "Invalid password hash length")
     @Column(name = "hash_password", nullable = false)
     String hashPassword;
 
@@ -52,6 +52,10 @@ public class User {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @Builder.Default
     List<Project> projects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    List<ChatSession> chatSessions = new ArrayList<>();
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     @Builder.Default
