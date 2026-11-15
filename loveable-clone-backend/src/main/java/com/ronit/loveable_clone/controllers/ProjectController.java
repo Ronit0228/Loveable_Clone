@@ -22,34 +22,34 @@ public class ProjectController {
 
     ProjectService projectService;
 
-    @GetMapping("/my-projects")
-    public ResponseEntity<List<ProjectSummaryResponse>> getMyProjects() {
-        UUID id = UUID.randomUUID();
-        return ResponseEntity.ok(projectService.getAllUserProjects(id));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable UUID id) {
-        UUID projectId = UUID.randomUUID();
-        return ResponseEntity.ok(projectService.getUserProjectById(id, projectId));
-    }
-
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(@RequestBody ProjectRequest projectRequest) {
         UUID userId = UUID.fromString("91dc50c8-d899-4d7a-87cf-f807c90d1752");
         return ResponseEntity.status(HttpStatus.OK).body(projectService.createProject(projectRequest, userId));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProjectResponse> updateProject(@PathVariable UUID id, @RequestBody ProjectRequest projectRequest) {
-        UUID userId = UUID.randomUUID();
-        return ResponseEntity.ok(projectService.updateProject(id, projectRequest, userId));
+    @GetMapping("/my-projects")
+    public ResponseEntity<List<ProjectSummaryResponse>> getMyProjects() {
+        UUID userId = UUID.fromString("91dc50c8-d899-4d7a-87cf-f807c90d1752");
+        return ResponseEntity.ok(projectService.getAllUserProjects(userId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable UUID id) {
-        UUID userId = UUID.randomUUID();
-        projectService.softDelete(id, userId);
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable UUID projectId) {
+        UUID userId = UUID.fromString("91dc50c8-d899-4d7a-87cf-f807c90d1752");
+        return ResponseEntity.ok(projectService.getUserProjectById(projectId, userId));
+    }
+
+    @PatchMapping("/{projectId}")
+    public ResponseEntity<ProjectResponse> updateProject(@PathVariable UUID projectId, @RequestBody ProjectRequest projectRequest) {
+        UUID userId = UUID.fromString("91dc50c8-d899-4d7a-87cf-f807c90d1752");
+        return ResponseEntity.ok(projectService.updateProject(projectId, projectRequest, userId));
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable UUID projectId) {
+        UUID userId = UUID.fromString("91dc50c8-d899-4d7a-87cf-f807c90d1752");
+        projectService.softDelete(projectId, userId);
         return ResponseEntity.noContent().build();
     }
 }

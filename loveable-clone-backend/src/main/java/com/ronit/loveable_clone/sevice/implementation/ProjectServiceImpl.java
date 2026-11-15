@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,22 +42,41 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectSummaryResponse> getAllUserProjects(UUID id) {
-        return List.of();
+    public List<ProjectSummaryResponse> getAllUserProjects(UUID userId) {
+        List<Project> allProjects = projectRepository.findAllAccessibleProjectByUser(userId);
+        return allProjects.stream()
+                .map(projectMapper::toProjectSummary)
+                .toList();
     }
 
     @Override
-    public ProjectResponse getUserProjectById(UUID id, UUID projectId) {
-        return null;
+    public ProjectResponse getUserProjectById(UUID projectId, UUID userId) {
+        Project project = getAccessibleProjectById(projectId, userId);
+        return projectMapper.toProjectResponse(project);
     }
 
     @Override
-    public ProjectResponse updateProject(UUID id, ProjectRequest projectRequest, UUID userId) {
-        return null;
+    public ProjectResponse updateProject(UUID projectId, ProjectRequest projectRequest, UUID userId) {
+        Project project = getAccessibleProjectById(projectId, userId);
+        if(!project.getOwner().getId().equals(userId)) throw new RuntimeException("You are not allowed to update this Project : " + project.getName());
+
+        project.setName(projectRequest.name());
+        project = projectRepository.saveAndFlush(project);
+
+        return projectMapper.toProjectResponse(project);
     }
 
     @Override
-    public void softDelete(UUID id, UUID userId) {
+    public void softDelete(UUID projectId, UUID userId) {
+        Project project = getAccessibleProjectById(projectId, userId);
+        if(!project.getOwner().getId().equals(userId)) throw new RuntimeException("You are not allowed to delete this Project : " + project.getName());
 
+        project.setDeletedAt(Instant.now());
+        projectRepository.save(project);
+    }
+
+    // INTERNAL METHODS
+    private Project getAccessibleProjectById(UUID projectId, UUID userId) {
+        return projectRepository.findAllAccessibleProjectById(projectId, userId).orElseThrow();
     }
 }
